@@ -2,7 +2,7 @@ import machine
 import socket
 
 def site_humidity_json():
-    humidity_json = ""
+    humidity_json = "{\"test\":5}"
     socket_listen_port = 80
     socket_listen_ip = "0.0.0.0"
 
@@ -28,6 +28,6 @@ def site_humidity_json():
                 break
 
         response = humidity_json
-        cl.send("HTTP/1.0 200 OK")
+        cl.send("HTTP/1.0 200 OK\r\nContent-type: application/json\r\n\r\n'")
         cl.send(response)
         cl.close()
