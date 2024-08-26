@@ -1,8 +1,26 @@
+import dht11
 import machine
 import socket
 
+def build_html(temperature, humidity):
+    html = f"""
+        <!DOCTYPE html>
+        <html>
+        <body>
+
+        <h1>Temperature</h1>
+        <p>{temperature}C</p>
+
+        <h1>Humidity</h1>
+        <p>{humidity}%</p>
+
+        </body>
+        </html>
+    """
+
+    return html
+
 def site_humidity_json():
-    humidity_json = "{\"test\":5}"
     socket_listen_port = 80
     socket_listen_ip = "0.0.0.0"
 
@@ -27,7 +45,10 @@ def site_humidity_json():
             if not line or line == b"\r\n":
                 break
 
-        response = humidity_json
-        cl.send("HTTP/1.0 200 OK\r\nContent-type: application/json\r\n\r\n'")
+        temperature, humidity = dht11.get_temperature_and_humidity()
+
+        html = build_html(temperature, humidity)
+        response = html
+
         cl.send(response)
         cl.close()
